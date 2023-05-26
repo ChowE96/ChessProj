@@ -3,9 +3,34 @@ namespace Chess {
         private string icon;
         private string name;
         private string type;
+        enum PieceType {
+            Pawn,
+            Bishop,
+            Knight,
+            Rook,
+            Queen,
+            King
+        }
 
-        public void moveType(string type) {
-            
+        public void moveType() {
+            switch (Enum.Parse<PieceType>(type)) {
+            case PieceType.Pawn:
+                break;
+            case PieceType.Bishop:
+                break;
+            case PieceType.Knight:
+                break;
+            case PieceType.Rook:
+                break;
+            case PieceType.Queen:
+                break;
+            case PieceType.King:
+                break;
+            //Default
+            default:
+                Console.WriteLine("No such piece exists");
+                break;
+            }
         }
 
         public ChessPiece(string icon, string name) {
