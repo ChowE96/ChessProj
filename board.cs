@@ -1,8 +1,8 @@
 namespace Chess {
-    class Board {
+    public class Board {
         private ChessPiece[,] boardXY = new ChessPiece[8, 8];
 
-        //This is only for debugging do not use pls
+        //Instantiates all the pieces and sets up the board for a game
         public void fillBoard() {
             for(int x = 0; x < boardXY.GetLength(0); x++) {
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
@@ -33,6 +33,7 @@ namespace Chess {
                 }
             }
         }
+        //Draws the board with all the objects and empty spaces
         public void drawBoard() {
             for(int x = 0; x < boardXY.GetLength(0); x++) {
                 Console.Write(8 - x);
@@ -50,17 +51,10 @@ namespace Chess {
             for(int i = 0; i < boardXY.GetLength(0); i++) {
                 Console.Write(" " + (char)(97 + i) + " " + " ");
             }
+            Console.WriteLine();
+            Console.WriteLine();
         }
-
-        //For the developer pls don't use
-        public void drawCoordinates() {
-            for(int x = 0; x < boardXY.GetLength(0); x++) {
-                for(int y = 0; y < boardXY.GetLength(1); y++) {
-                    Console.Write(x + "," + y + " ");
-                }
-                Console.WriteLine();
-            }
-        }
+        //Move pieces
         public void movePiece(String input) {
             
         }
