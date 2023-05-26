@@ -8,28 +8,28 @@ namespace Chess {
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
                     
                     //Pawns
-                    if (x == 1) { boardXY[x,y] = new ChessPiece("BP"); }
-                    if (x == 6) { boardXY[x,y] = new ChessPiece("WP"); }
+                    if (x == 1) { boardXY[x,y] = new ChessPiece("BP","Pawn"); }
+                    if (x == 6) { boardXY[x,y] = new ChessPiece("WP","Pawn"); }
 
                     //Bishops
-                    if ((x == 0 && y == 2) || (x == 0 && y == 5)) { boardXY[x,y] = new ChessPiece("BB"); }
-                    if ((x == 7 && y == 2) || (x == 7 && y == 5)) { boardXY[x,y] = new ChessPiece("WB"); }
+                    if ((x == 0 && y == 2) || (x == 0 && y == 5)) { boardXY[x,y] = new ChessPiece("BB","Bishop"); }
+                    if ((x == 7 && y == 2) || (x == 7 && y == 5)) { boardXY[x,y] = new ChessPiece("WB","Bishop"); }
 
                     //Knights
-                    if ((x == 0 && y == 1) || (x == 0 && y == 6)) { boardXY[x,y] = new ChessPiece("BN"); }
-                    if ((x == 7 && y == 1) || (x == 7 && y == 6)) { boardXY[x,y] = new ChessPiece("WN"); }
+                    if ((x == 0 && y == 1) || (x == 0 && y == 6)) { boardXY[x,y] = new ChessPiece("BN","Knight"); }
+                    if ((x == 7 && y == 1) || (x == 7 && y == 6)) { boardXY[x,y] = new ChessPiece("WN","Knight"); }
 
                     //Rooks
-                    if ((x == 0 && y == 0) || (x == 0 && y == 7)) { boardXY[x,y] = new ChessPiece("BR"); }
-                    if ((x == 7 && y == 0) || (x == 7 && y == 7)) { boardXY[x,y] = new ChessPiece("WR"); }
+                    if ((x == 0 && y == 0) || (x == 0 && y == 7)) { boardXY[x,y] = new ChessPiece("BR","Rook"); }
+                    if ((x == 7 && y == 0) || (x == 7 && y == 7)) { boardXY[x,y] = new ChessPiece("WR","Rook"); }
 
                     //Queens
-                    if ((x == 0 && y == 3)) { boardXY[x,y] = new ChessPiece("BQ"); }
-                    if ((x == 7 && y == 3)) { boardXY[x,y] = new ChessPiece("WQ"); }
+                    if ((x == 0 && y == 3)) { boardXY[x,y] = new ChessPiece("BQ","Queen"); }
+                    if ((x == 7 && y == 3)) { boardXY[x,y] = new ChessPiece("WQ","Queen"); }
 
                     //Kings
-                    if ((x == 0 && y == 4)) { boardXY[x,y] = new ChessPiece("BK"); }
-                    if ((x == 7 && y == 4)) { boardXY[x,y] = new ChessPiece("WK"); }
+                    if ((x == 0 && y == 4)) { boardXY[x,y] = new ChessPiece("BK","King"); }
+                    if ((x == 7 && y == 4)) { boardXY[x,y] = new ChessPiece("WK","King"); }
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace Chess {
                 Console.Write(8 - x);
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
                     if (boardXY[x,y] != null) {
-                        Console.Write("[" + boardXY[x,y].Name + "]");
+                        Console.Write("[" + boardXY[x,y].Icon + "]");
                     }
                     else {
                         Console.Write("[" + "  " + "]");
@@ -55,13 +55,28 @@ namespace Chess {
             Console.WriteLine();
         }
         //Move pieces
-        public void movePiece(String input) {
-            
+        public void movePiece() {
+            Console.WriteLine("Please select a piece using the coordinates: ");
+            char[] coord = Console.ReadLine().ToCharArray();
+            int x = 8 - ((int)coord[1] - 48);
+            int y = (int)coord[0] - 97;
+
+            //Debug line
+            //Console.WriteLine(x + " " + y);
+
+            try {
+                if (boardXY[x,y] != null) {
+                Console.WriteLine("You have selected: " + boardXY[x,y].Name);
+                }
+            }
+            catch {
+                Console.WriteLine("There is no piece at that location");
+            }
         }
         public bool inCheck() {
             return false;
         }
-        public bool inCheckmate() {
+        public bool isCheckmate() {
             return false;
         }
     }
