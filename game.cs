@@ -4,9 +4,9 @@ namespace Chess {
             Board board = new Board();
             board.fillBoard();
 
-            while(!board.inCheckmate()) {
+            while(!board.isCheckmate()) {
                 board.drawBoard();
-                board.movePiece(Console.ReadLine());
+                board.movePiece();
             }
         }
     }
