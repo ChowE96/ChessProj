@@ -34,6 +34,7 @@ namespace Chess {
             }
         }
         public void drawBoard() {
+            //LMAO this does nothing :D
             char[] letter = new char[8];
             letter[0] = 'a';
             letter[1] = 'b';
