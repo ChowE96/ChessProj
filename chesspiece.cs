@@ -1,16 +1,25 @@
 namespace Chess {
     public class ChessPiece {
+        private string icon;
         private string name;
         private int x;
         private int y;
 
         public void moveType() {}
 
-        public ChessPiece(string name) {
+        public ChessPiece(string icon, string name) {
+            this.icon = icon;
             this.name = name;
         }
+
+        //These are so cool
+        public string Icon {
+            get => icon;
+            set => icon = value;
+        }
         public string Name {
-            get {return this.name;}
+            get => name;
+            set => name = value;
         }
     }
 }
