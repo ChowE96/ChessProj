@@ -34,17 +34,6 @@ namespace Chess {
             }
         }
         public void drawBoard() {
-            //LMAO this does nothing :D
-            char[] letter = new char[8];
-            letter[0] = 'a';
-            letter[1] = 'b';
-            letter[2] = 'c';
-            letter[3] = 'd';
-            letter[4] = 'e';
-            letter[5] = 'f';
-            letter[6] = 'g';
-            letter[7] = 'h';
-            
             for(int x = 0; x < boardXY.GetLength(0); x++) {
                 Console.Write(8 - x);
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
