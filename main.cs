@@ -6,6 +6,7 @@ namespace Chess {
             board.fillBoard();
             board.drawBoard();
             board.movePiece(Console.ReadLine());
+            Console.WriteLine("This is my second commit!!");
         }
     }
 }
