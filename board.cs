@@ -64,14 +64,39 @@ namespace Chess {
             //Debug line
             //Console.WriteLine(x + " " + y);
 
+            isChessPiece(x,y);
+
+            Console.WriteLine("Where do you want to move that piece: ");
+            coord = Console.ReadLine().ToCharArray();
+            int toX = 8 - ((int)coord[1] - 48);
+            int toY = (int)coord[0] - 97;
+
             try {
-                if (boardXY[x,y] != null) {
-                Console.WriteLine("You have selected: " + boardXY[x,y].Name);
+                if (boardXY[toX,toY] != null) {
+                    boardXY[toX,toY] = null;
                 }
             }
             catch {
-                Console.WriteLine("There is no piece at that location");
+                Console.WriteLine("You cannot move to that location");
             }
+        }
+        private bool isChessPiece(int x, int y) {
+            //Turing test
+            try {
+                if (boardXY[x,y] != null) {
+                    Console.WriteLine("You have selected: " + boardXY[x,y].Name);
+                    return true;
+                }
+                else {
+                    Console.WriteLine("That piece does not exist");
+                    return false;
+                }
+            }
+            catch {
+                Console.WriteLine("That is outside the board");
+                return false;
+            }
+
         }
         public bool inCheck() {
             return false;
