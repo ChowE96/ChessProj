@@ -58,5 +58,11 @@ namespace Chess {
         public void movePiece(String input) {
             
         }
+        public bool inCheck() {
+            return false;
+        }
+        public bool inCheckmate() {
+            return false;
+        }
     }
 }
