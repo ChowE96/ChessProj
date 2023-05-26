@@ -1,2 +1,10 @@
 bin/Debug/net7.0/ChessProj.dll
 bin/Debug/net7.0/ChessProj.pdb
+obj/Debug/net7.0/refint/ChessProj.dll
+bin/Debug/net7.0/ChessProj.deps.json
+bin/Debug/net7.0/ChessProj.exe
+.gitignore
+obj/Debug/net7.0/ChessProj.dll
+obj/Debug/net7.0/ChessProj.pdb
+obj/Debug/net7.0/ref/ChessProj.dll
+.gitignore
