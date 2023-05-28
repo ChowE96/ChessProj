@@ -33,25 +33,26 @@ namespace Chess {
                     //Kings
                     if ((x == 0 && y == 4)) { boardXY[x,y] = new BoardSlot("BK","King"); }
                     if ((x == 7 && y == 4)) { boardXY[x,y] = new BoardSlot("WK","King"); }
+
+                    //Empty Spaces
+                    //TODO: Recognize if a spot is empty without a piece and fill that in automatically
+                    if ((x == 2 || x == 3 || x == 4 || x == 5)) { boardXY[x,y] = new BoardSlot(); }               
                 }
             }
         }
         //Draws the board with all the objects and empty spaces
         public void drawBoard() {
             for(int x = 0; x < boardXY.GetLength(0); x++) {
+                //Chess board number coordinates
                 Console.Write(8 - x);
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
-                    if (boardXY[x,y] != null) {
-                        Console.Write("[" + boardXY[x,y].Piece.Icon + "]");
-                    }
-                    else {
-                        Console.Write("[" + "  " + "]");
-                    }    
+                    Console.Write("[" + boardXY[x,y].Piece.Icon + "]");
                 }
                 Console.WriteLine();
             }
             Console.Write(" ");
             for(int i = 0; i < boardXY.GetLength(0); i++) {
+                //Chess board letter coordinates
                 Console.Write(" " + (char)(97 + i) + " " + " ");
             }
             Console.WriteLine();
@@ -67,39 +68,39 @@ namespace Chess {
             //Debug line
             //Console.WriteLine(x + " " + y);
 
-            isChessPiece(x,y);
-
-            Console.WriteLine("Where do you want to move that piece: ");
-            coord = Console.ReadLine().ToCharArray();
-            int toX = 8 - ((int)coord[1] - 48);
-            int toY = (int)coord[0] - 97;
-
             try {
-                if (boardXY[toX,toY] != null) {
-                    boardXY[toX,toY] = null;
-                }
-            }
-            catch {
-                Console.WriteLine("You cannot move to that location");
-            }
-        }
-        private bool isChessPiece(int x, int y) {
-            //Turing test
-            try {
-                if (boardXY[x,y] != null) {
+                if (!boardXY[x,y].isEmpty()) {
                     Console.WriteLine("You have selected: " + boardXY[x,y].Piece.Name);
-                    return true;
+                    Console.WriteLine("Where do you want to move that piece: ");
+                    coord = Console.ReadLine().ToCharArray();
+                    int toX = 8 - ((int)coord[1] - 48);
+                    int toY = (int)coord[0] - 97;
+                    
+                    try {
+                        if (boardXY[toX,toY].isEmpty()) {
+                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                            boardXY[x,y].empty();
+                        }
+                        else {
+                            boardXY[toX,toY].empty();
+                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                            boardXY[x,y].empty();
+                        }
+                    }
+                    catch {
+                        Console.WriteLine("You cannot move to that location");
+                        return;
+                    }
                 }
                 else {
                     Console.WriteLine("That piece does not exist");
-                    return false;
+                    return;
                 }
             }
             catch {
-                Console.WriteLine("That is outside the board");
-                return false;
+                Console.WriteLine("That location doesn't exist");
+                return;
             }
-
         }
         public bool inCheck() {
             return false;
