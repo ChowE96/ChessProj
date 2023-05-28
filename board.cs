@@ -4,6 +4,19 @@ namespace Chess {
     public class Board {
         private BoardSlot[,] boardXY = new BoardSlot[8, 8];
         //private List<ChessPiece> boardXY2 = new List<ChessPiece>(boardXY);
+        enum PieceType {
+            Pawn,
+            Bishop,
+            Knight,
+            Rook,
+            Queen,
+            King
+        }
+
+        public BoardSlot[,] BoardXY {
+            get => boardXY;
+            set => boardXY = value;
+        }
 
         //Instantiates all the pieces and sets up the board for a game
         public void fillBoard() {
@@ -81,15 +94,18 @@ namespace Chess {
                             Console.WriteLine("You deselected: " + boardXY[x,y].Piece.Name);
                             return;
                         }
-                        if (boardXY[toX,toY].isEmpty()) {
-                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
-                            boardXY[x,y].empty();
+                        if(validMove(x,y,toX,toY)) {
+                            if (boardXY[toX,toY].isEmpty()) {
+                                boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                                boardXY[x,y].empty();
+                            }
+                            else {
+                                boardXY[toX,toY].empty();
+                                boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                                boardXY[x,y].empty();
+                            }   
                         }
-                        else {
-                            boardXY[toX,toY].empty();
-                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
-                            boardXY[x,y].empty();
-                        }
+
                     }
                     catch {
                         Console.WriteLine("You cannot move to that location");
@@ -106,11 +122,37 @@ namespace Chess {
                 return;
             }
         }
+        //Checks the boardstate for check, probably not needed
         public bool inCheck() {
             return false;
         }
+        //Checks to see if the game is over
         public bool isCheckmate() {
             return false;
         }
+        public bool validMove(int x, int y, int toX, int toY) {
+            PieceType type = Enum.Parse<PieceType>(boardXY[x,y].Piece.Name);
+                switch (type) {
+                case PieceType.Pawn:
+                    break;
+                case PieceType.Bishop:
+                    break;
+                case PieceType.Knight:
+                    break;
+                case PieceType.Rook:
+                    break;
+                case PieceType.Queen:
+                    break;
+                case PieceType.King:
+                    break;
+                //Default
+                default:
+                    Console.WriteLine("That is not a chess piece");
+                    break;
+                }
+            //Debug
+            Console.WriteLine("Checking " + boardXY[x,y].Piece.Name + "'s movement");
+            return true;
+        }       
     }
 }
