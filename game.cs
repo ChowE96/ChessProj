@@ -6,8 +6,11 @@ namespace Chess {
             board.fillBoard();
 
             while(!board.isCheckmate()) {
+
                 board.drawBoard();
+
                 board.movePiece();
+                
             }
         }
     }
