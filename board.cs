@@ -78,7 +78,8 @@ namespace Chess {
                     
                     try {
                         if(x == toX && y == toY) {
-                        throw new Exception();
+                            Console.WriteLine("You deselected: " + boardXY[x,y].Piece.Name);
+                            return;
                         }
                         if (boardXY[toX,toY].isEmpty()) {
                             boardXY[toX,toY].Piece = boardXY[x,y].Piece;
