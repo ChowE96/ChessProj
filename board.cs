@@ -77,6 +77,9 @@ namespace Chess {
                     int toY = (int)coord[0] - 97;
                     
                     try {
+                        if(x == toX && y == toY) {
+                        throw new Exception();
+                        }
                         if (boardXY[toX,toY].isEmpty()) {
                             boardXY[toX,toY].Piece = boardXY[x,y].Piece;
                             boardXY[x,y].empty();
