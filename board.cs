@@ -78,7 +78,7 @@ namespace Chess {
             int x = 8 - ((int)coord[1] - 48);
             int y = (int)coord[0] - 97;
 
-            //Debug line
+            //Debug
             //Console.WriteLine(x + " " + y);
 
             try {
@@ -105,7 +105,9 @@ namespace Chess {
                                 boardXY[x,y].empty();
                             }   
                         }
-
+                        else {
+                            Console.WriteLine("You cannot move to that location");
+                        }
                     }
                     catch {
                         Console.WriteLine("You cannot move to that location");
@@ -144,6 +146,9 @@ namespace Chess {
                 case PieceType.Queen:
                     break;
                 case PieceType.King:
+                    if ((toX == x+1 || toX == x-1 || toX == x) && (toY == y+1 || toY == y-1 || toY == y)) {
+                        return true;
+                    }
                     break;
                 //Default
                 default:
@@ -151,8 +156,8 @@ namespace Chess {
                     break;
                 }
             //Debug
-            Console.WriteLine("Checking " + boardXY[x,y].Piece.Name + "'s movement");
-            return true;
+            //Console.WriteLine("Checking " + boardXY[x,y].Piece.Name + "'s movement");
+            return false;
         }       
     }
 }
