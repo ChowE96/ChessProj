@@ -34,7 +34,7 @@ namespace Chess {
         }
 
         public ChessPiece() {
-            this.icon = "";
+            this.icon = "  ";
             this.name = "";
         }
         public ChessPiece(string icon, string name) {
