@@ -1,12 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-namespace Chess {
-    class Run {
+﻿namespace Chess {
+    public class Program {
         public static void Main(string[] args) {
-            Board board = new Board();
-            board.fillBoard();
-            board.drawBoard();
-            board.movePiece(Console.ReadLine());
-            Console.WriteLine("This is my second commit!!");
+            Game.run();
         }
     }
 }

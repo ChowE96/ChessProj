@@ -1,79 +1,112 @@
-namespace Chess {
-    class Board {
-        private ChessPiece[,] boardXY = new ChessPiece[8, 8];
+using System.Collections;
 
-        //This is only for debugging do not use pls
+namespace Chess {
+    public class Board {
+        private BoardSlot[,] boardXY = new BoardSlot[8, 8];
+        //private List<ChessPiece> boardXY2 = new List<ChessPiece>(boardXY);
+
+        //Instantiates all the pieces and sets up the board for a game
         public void fillBoard() {
             for(int x = 0; x < boardXY.GetLength(0); x++) {
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
                     
                     //Pawns
-                    if (x == 1) { boardXY[x,y] = new ChessPiece("BP"); }
-                    if (x == 6) { boardXY[x,y] = new ChessPiece("WP"); }
+                    if (x == 1) { boardXY[x,y] = new BoardSlot("BP","Pawn"); }
+                    if (x == 6) { boardXY[x,y] = new BoardSlot("WP","Pawn"); }
 
                     //Bishops
-                    if ((x == 0 && y == 2) || (x == 0 && y == 5)) { boardXY[x,y] = new ChessPiece("BB"); }
-                    if ((x == 7 && y == 2) || (x == 7 && y == 5)) { boardXY[x,y] = new ChessPiece("WB"); }
+                    if ((x == 0 && y == 2) || (x == 0 && y == 5)) { boardXY[x,y] = new BoardSlot("BB","Bishop"); }
+                    if ((x == 7 && y == 2) || (x == 7 && y == 5)) { boardXY[x,y] = new BoardSlot("WB","Bishop"); }
 
                     //Knights
-                    if ((x == 0 && y == 1) || (x == 0 && y == 6)) { boardXY[x,y] = new ChessPiece("BN"); }
-                    if ((x == 7 && y == 1) || (x == 7 && y == 6)) { boardXY[x,y] = new ChessPiece("WN"); }
+                    if ((x == 0 && y == 1) || (x == 0 && y == 6)) { boardXY[x,y] = new BoardSlot("BN","Knight"); }
+                    if ((x == 7 && y == 1) || (x == 7 && y == 6)) { boardXY[x,y] = new BoardSlot("WN","Knight"); }
 
                     //Rooks
-                    if ((x == 0 && y == 0) || (x == 0 && y == 7)) { boardXY[x,y] = new ChessPiece("BR"); }
-                    if ((x == 7 && y == 0) || (x == 7 && y == 7)) { boardXY[x,y] = new ChessPiece("WR"); }
+                    if ((x == 0 && y == 0) || (x == 0 && y == 7)) { boardXY[x,y] = new BoardSlot("BR","Rook"); }
+                    if ((x == 7 && y == 0) || (x == 7 && y == 7)) { boardXY[x,y] = new BoardSlot("WR","Rook"); }
 
                     //Queens
-                    if ((x == 0 && y == 3)) { boardXY[x,y] = new ChessPiece("BQ"); }
-                    if ((x == 7 && y == 3)) { boardXY[x,y] = new ChessPiece("WQ"); }
+                    if ((x == 0 && y == 3)) { boardXY[x,y] = new BoardSlot("BQ","Queen"); }
+                    if ((x == 7 && y == 3)) { boardXY[x,y] = new BoardSlot("WQ","Queen"); }
 
                     //Kings
-                    if ((x == 0 && y == 4)) { boardXY[x,y] = new ChessPiece("BK"); }
-                    if ((x == 7 && y == 4)) { boardXY[x,y] = new ChessPiece("WK"); }
+                    if ((x == 0 && y == 4)) { boardXY[x,y] = new BoardSlot("BK","King"); }
+                    if ((x == 7 && y == 4)) { boardXY[x,y] = new BoardSlot("WK","King"); }
+
+                    //Empty Spaces
+                    //TODO: Recognize if a spot is empty without a piece and fill that in automatically
+                    if ((x == 2 || x == 3 || x == 4 || x == 5)) { boardXY[x,y] = new BoardSlot(); }               
                 }
             }
         }
+        //Draws the board with all the objects and empty spaces
         public void drawBoard() {
-            //LMAO this does nothing :D
-            char[] letter = new char[8];
-            letter[0] = 'a';
-            letter[1] = 'b';
-            letter[2] = 'c';
-            letter[3] = 'd';
-            letter[4] = 'e';
-            letter[5] = 'f';
-            letter[6] = 'g';
-            letter[7] = 'h';
-            
             for(int x = 0; x < boardXY.GetLength(0); x++) {
+                //Chess board number coordinates
                 Console.Write(8 - x);
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
-                    if (boardXY[x,y] != null) {
-                        Console.Write("[" + boardXY[x,y].Name + "]");
-                    }
-                    else {
-                        Console.Write("[" + "  " + "]");
-                    }    
+                    Console.Write("[" + boardXY[x,y].Piece.Icon + "]");
                 }
                 Console.WriteLine();
             }
             Console.Write(" ");
             for(int i = 0; i < boardXY.GetLength(0); i++) {
+                //Chess board letter coordinates
                 Console.Write(" " + (char)(97 + i) + " " + " ");
             }
+            Console.WriteLine();
+            Console.WriteLine();
         }
+        //Move pieces
+        public void movePiece() {
+            Console.WriteLine("Please select a piece using the coordinates: ");
+            char[] coord = Console.ReadLine().ToCharArray();
+            int x = 8 - ((int)coord[1] - 48);
+            int y = (int)coord[0] - 97;
 
-        //For the developer pls don't use
-        public void drawCoordinates() {
-            for(int x = 0; x < boardXY.GetLength(0); x++) {
-                for(int y = 0; y < boardXY.GetLength(1); y++) {
-                    Console.Write(x + "," + y + " ");
+            //Debug line
+            //Console.WriteLine(x + " " + y);
+
+            try {
+                if (!boardXY[x,y].isEmpty()) {
+                    Console.WriteLine("You have selected: " + boardXY[x,y].Piece.Name);
+                    Console.WriteLine("Where do you want to move that piece: ");
+                    coord = Console.ReadLine().ToCharArray();
+                    int toX = 8 - ((int)coord[1] - 48);
+                    int toY = (int)coord[0] - 97;
+                    
+                    try {
+                        if (boardXY[toX,toY].isEmpty()) {
+                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                            boardXY[x,y].empty();
+                        }
+                        else {
+                            boardXY[toX,toY].empty();
+                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                            boardXY[x,y].empty();
+                        }
+                    }
+                    catch {
+                        Console.WriteLine("You cannot move to that location");
+                        return;
+                    }
                 }
-                Console.WriteLine();
+                else {
+                    Console.WriteLine("That piece does not exist");
+                    return;
+                }
+            }
+            catch {
+                Console.WriteLine("That location doesn't exist");
+                return;
             }
         }
-        public void movePiece(String input) {
-            
+        public bool inCheck() {
+            return false;
+        }
+        public bool isCheckmate() {
+            return false;
         }
     }
 }
