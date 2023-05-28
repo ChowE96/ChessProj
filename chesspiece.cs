@@ -2,7 +2,7 @@ namespace Chess {
     public class ChessPiece {
         private string icon;
         private string name;
-        private string type;
+        private PieceType type;
         enum PieceType {
             Pawn,
             Bishop,
@@ -13,7 +13,7 @@ namespace Chess {
         }
 
         public void moveType() {
-            switch (Enum.Parse<PieceType>(type)) {
+            switch (type) {
             case PieceType.Pawn:
                 break;
             case PieceType.Bishop:
@@ -33,10 +33,14 @@ namespace Chess {
             }
         }
 
+        public ChessPiece() {
+            this.icon = "";
+            this.name = "";
+        }
         public ChessPiece(string icon, string name) {
             this.icon = icon;
             this.name = name;
-            this.type = name;
+            this.type = Enum.Parse<PieceType>(name);
         }
 
         //These are so cool
