@@ -73,15 +73,15 @@ namespace Chess {
         }
         //Move pieces
         public void movePiece() {
-            Console.WriteLine("Please select a piece using the coordinates: ");
-            char[] coord = Console.ReadLine().ToCharArray();
-            int x = 8 - ((int)coord[1] - 48);
-            int y = (int)coord[0] - 97;
-
             //Debug
             //Console.WriteLine(x + " " + y);
 
             try {
+                Console.WriteLine("Please select a piece using the coordinates: ");
+                char[] coord = Console.ReadLine().ToCharArray();
+                int x = 8 - ((int)coord[1] - 48);
+                int y = (int)coord[0] - 97;
+
                 if (!boardXY[x,y].isEmpty()) {
                     Console.WriteLine("You have selected: " + boardXY[x,y].Piece.Name);
                     Console.WriteLine("Where do you want to move that piece: ");
@@ -134,19 +134,58 @@ namespace Chess {
         }
         public bool validMove(int x, int y, int toX, int toY) {
             PieceType type = Enum.Parse<PieceType>(boardXY[x,y].Piece.Name);
+            int offset = toX - x;
                 switch (type) {
                 case PieceType.Pawn:
                     break;
                 case PieceType.Bishop:
+                    if ( ((toX == x + offset) && (toY == y + offset))
+                        || ((toX == x + offset) && (toY == y - offset))) {
+                        return true;
+                    }
                     break;
                 case PieceType.Knight:
+                    bool NAlg(int i, int j) {
+                        // if ( (Math.Abs(x - i) == 1) && ((Math.Abs(y = j) == 2)) 
+                        //     || (Math.Abs(x - i) == 2) && ((Math.Abs(y = j) == 1)) ) {
+                        //     return true;
+                        // }
+                        if ( ((i == x - 2) || (i == x + 2)) && ((j == y + 1) || (j == y - 1)) 
+                        || ((j == y - 2) || (j == y + 2)) && ((i== x + 1) || (i == x - 1)) ) {
+                            return true;
+                        }
+                        else { return false; }
+                    }                   
+
+                    //Debug
+                    for(int i = 0; i <= 7; i++) {
+                        for(int j = 0; j <= 7; j++) {
+                            if ( NAlg(i,j) ) {
+                                Console.Write("(" + (char)(j + 97) + "," + (8 - i) + ")");
+                            }
+                        }
+                    }
+                    Console.WriteLine();
+
+                    if ( NAlg(toX,toY) ) {
+                        return true;
+                    }
                     break;
                 case PieceType.Rook:
+                    if ( (toX == x) || (toY == y) ) {
+                        return true;
+                    }
                     break;
                 case PieceType.Queen:
+                    if ( (((toX == x + offset) && (toY == y + offset))
+                        || ((toX == x + offset) && (toY == y - offset)))
+                        || ((toX == x) || (toY == y)) ) {
+                        return true;
+                    }
                     break;
                 case PieceType.King:
-                    if ((toX == x+1 || toX == x-1 || toX == x) && (toY == y+1 || toY == y-1 || toY == y)) {
+                    if ( (toX == x + 1 || toX == x - 1 || toX == x) 
+                        && (toY == y + 1 || toY == y - 1 || toY == y) ) {
                         return true;
                     }
                     break;
