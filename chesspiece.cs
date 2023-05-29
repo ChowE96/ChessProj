@@ -2,6 +2,7 @@ namespace Chess {
     public class ChessPiece {
         private string icon;
         private string name;
+        private string color;
 
         public ChessPiece() {
             this.icon = "  ";
