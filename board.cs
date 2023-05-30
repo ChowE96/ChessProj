@@ -3,7 +3,6 @@ using System.Collections;
 namespace Chess {
     public class Board {
         private BoardSlot[,] boardXY = new BoardSlot[8, 8];
-        //private List<ChessPiece> boardXY2 = new List<ChessPiece>(boardXY);
         enum PieceType {
             Pawn,
             Bishop,
@@ -12,7 +11,10 @@ namespace Chess {
             Queen,
             King
         }
+        int[]? currSelection = new int[2];
+        string turn; //Determines who's turn it is
 
+        //Constructor
         public BoardSlot[,] BoardXY {
             get => boardXY;
             set => boardXY = value;
@@ -53,13 +55,21 @@ namespace Chess {
                 }
             }
         }
+        public void fillEmptyBoard() {
+            for(int x = 0; x < boardXY.GetLength(0); x++) {
+                for(int y = 0; y < boardXY.GetLength(1); y++) {
+                    boardXY[x,y] = new BoardSlot();
+                }
+            }
+        }
+
         //Draws the board with all the objects and empty spaces
         public void drawBoard() {
             for(int x = 0; x < boardXY.GetLength(0); x++) {
                 //Chess board number coordinates
                 Console.Write(8 - x);
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
-                    Console.Write("[" + boardXY[x,y].Piece.Icon + "]");
+                    Console.Write(boardXY[x,y]);
                 }
                 Console.WriteLine();
             }
@@ -71,8 +81,14 @@ namespace Chess {
             Console.WriteLine();
             Console.WriteLine();
         }
-        //Move pieces
-        public void movePiece() {
+        
+        //Spawns in a chess piece
+        public void spawnPiece(string id, int x, int y) {
+            boardXY[x,y] = new BoardSlot("WQ","Queen");
+        }
+
+        //Select pieces and give coordinates they can move to
+        public bool selectPiece() {
             //Debug
             //Console.WriteLine(x + " " + y);
 
@@ -84,50 +100,70 @@ namespace Chess {
 
                 if (!boardXY[x,y].isEmpty()) {
                     Console.WriteLine("You have selected: " + boardXY[x,y].Piece.Name);
-                    Console.WriteLine("Where do you want to move that piece: ");
-                    coord = Console.ReadLine().ToCharArray();
-                    int toX = 8 - ((int)coord[1] - 48);
-                    int toY = (int)coord[0] - 97;
-                    
-                    try {
-                        if(x == toX && y == toY) {
-                            Console.WriteLine("You deselected: " + boardXY[x,y].Piece.Name);
-                            return;
-                        }
-                        if(validMove(x,y,toX,toY)) {
-                            if (boardXY[toX,toY].isEmpty()) {
-                                boardXY[toX,toY].Piece = boardXY[x,y].Piece;
-                                boardXY[x,y].empty();
-                            }
-                            else {
-                                boardXY[toX,toY].empty();
-                                boardXY[toX,toY].Piece = boardXY[x,y].Piece;
-                                boardXY[x,y].empty();
-                            }   
-                        }
-                        else {
-                            Console.WriteLine("You cannot move to that location");
-                        }
-                    }
-                    catch {
-                        Console.WriteLine("You cannot move to that location");
-                        return;
-                    }
+                    currSelection[0] = x;
+                    currSelection[1] = y;
+                    boardXY[x,y].IsSelected = true;
+                    return true;
                 }
                 else {
                     Console.WriteLine("That piece does not exist");
-                    return;
+                    return false;
                 }
             }
             catch {
                 Console.WriteLine("That location doesn't exist");
+                return false;
+            }
+        }
+        
+        //Move pieces
+        public void movePiece() {
+            Console.WriteLine("Where do you want to move that piece: ");
+            char[] coord = Console.ReadLine().ToCharArray();
+            int toX = 8 - ((int)coord[1] - 48);
+            int toY = (int)coord[0] - 97;
+            int x = currSelection[0];
+            int y = currSelection[1];
+
+            try {
+                if(x == toX && y == toY) {
+                    Console.WriteLine("You deselected: " + boardXY[x,y].Piece.Name);
+                    currSelection = new int[2];
+                    boardXY[x,y].IsSelected = false;
+                    return;
+                }
+                if(validMove(x,y,toX,toY)) {
+                    if (boardXY[toX,toY].isEmpty()) {
+                        boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                        boardXY[x,y].empty();
+                    }
+                    else {
+                        boardXY[toX,toY].empty();
+                        boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                        boardXY[x,y].empty();
+                    }
+                    currSelection = new int[2];
+                    boardXY[x,y].IsSelected = false;   
+                }
+                else {
+                    Console.WriteLine("You cannot move to that location");
+                    currSelection = new int[2];
+                    boardXY[x,y].IsSelected = false;
+                }
+            }
+            catch {
+                Console.WriteLine("You cannot move to that location");
+                currSelection = new int[2];
+                boardXY[x,y].IsSelected = false;
                 return;
             }
         }
+        
         //Checks the boardstate for check, probably not needed
         public bool inCheck() {
             return false;
         }
+        
         //Checks to see if the game is over
         public bool isCheckmate() {
             return false;
@@ -137,6 +173,10 @@ namespace Chess {
             int offset = toX - x;
                 switch (type) {
                 case PieceType.Pawn:
+                    if ( (toX == x + 1)
+                        || (toX == x - 1) ) {
+                        return true;
+                    }
                     break;
                 case PieceType.Bishop:
                     if ( ((toX == x + offset) && (toY == y + offset))
@@ -158,14 +198,14 @@ namespace Chess {
                     }                   
 
                     //Debug
-                    for(int i = 0; i <= 7; i++) {
-                        for(int j = 0; j <= 7; j++) {
-                            if ( NAlg(i,j) ) {
-                                Console.Write("(" + (char)(j + 97) + "," + (8 - i) + ")");
-                            }
-                        }
-                    }
-                    Console.WriteLine();
+                    // for(int i = 0; i <= 7; i++) {
+                    //     for(int j = 0; j <= 7; j++) {
+                    //         if ( NAlg(i,j) ) {
+                    //             Console.Write("(" + (char)(j + 97) + "," + (8 - i) + ")");
+                    //         }
+                    //     }
+                    // }
+                    // Console.WriteLine();
 
                     if ( NAlg(toX,toY) ) {
                         return true;
