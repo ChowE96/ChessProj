@@ -7,7 +7,7 @@ namespace Chess {
             board.fillEmptyBoard();
 
             // Spawning in objects
-            board.spawnPiece("2",5,5);
+            board.spawnPiece("BP","Pawn","Black",4,4);
             
             while(!board.isCheckmate()) {
 
@@ -18,6 +18,8 @@ namespace Chess {
                     board.drawBoard();
 
                     board.movePiece();
+
+                    board.deselectAll();
 
                 }
                 
