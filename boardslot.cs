@@ -19,7 +19,7 @@ namespace Chess {
             return( piece.Name == "" );
         }
         public override string ToString() {
-            if (isSelected) { return "{" + piece.Icon + "}"; }
+            if (isSelected) { return ">" + piece.Icon + "<"; }
             else { return "[" + piece.Icon + "]"; }
         }
 
@@ -27,8 +27,8 @@ namespace Chess {
         public BoardSlot() {
             empty();
         }
-        public BoardSlot(string icon, string name) {
-            piece = new ChessPiece(icon, name);
+        public BoardSlot(string icon, string name, string color) {
+            piece = new ChessPiece(icon, name, color);
         }
         public BoardSlot(string id) {
             
