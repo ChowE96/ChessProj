@@ -191,7 +191,9 @@ namespace Chess {
                 switch (type) {
                 case PieceType.Pawn:
                     if ( (toX == x + 1) && boardXY[x,y].Piece.Color == "Black" && (toY == y)
-                        || (toX == x - 1) && boardXY[x,y].Piece.Color == "White" && (toY == y)) {
+                        || (toX == x - 1) && boardXY[x,y].Piece.Color == "White" && (toY == y)
+                        || (toX == x + 2) && boardXY[x,y].Piece.Color == "Black" && (toY == y) && (x == 1)
+                        || (toX == x - 2) && boardXY[x,y].Piece.Color == "White" && (toY == y) && (x == 6) ) {
                         return true;
                     }
                     break;
