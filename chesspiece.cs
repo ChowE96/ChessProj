@@ -3,7 +3,7 @@ namespace Chess {
         private string icon;
         private string name;
         private string color;
-
+        
         public ChessPiece() {
             this.icon = "  ";
             this.name = "";
