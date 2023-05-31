@@ -8,9 +8,10 @@ namespace Chess {
             this.icon = "  ";
             this.name = "";
         }
-        public ChessPiece(string icon, string name) {
+        public ChessPiece(string icon, string name, string color) {
             this.icon = icon;
             this.name = name;
+            this.color = color;
         }
 
         //These are so cool
@@ -21,6 +22,10 @@ namespace Chess {
         public string Name {
             get => name;
             set => name = value;
+        }
+        public string Color {
+            get => color;
+            set => color = value;
         }
     }
 }
