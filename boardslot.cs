@@ -1,6 +1,6 @@
 namespace Chess {
     public class BoardSlot {
-        private ChessPiece piece;
+        private ChessPiece? piece;
         private bool isSelected = false;
 
         public ChessPiece Piece {
@@ -13,25 +13,25 @@ namespace Chess {
         }
 
         public void empty() { 
-            piece = new ChessPiece(); 
+            piece = null;
         }
         public bool isEmpty() {
-            return( piece.Name == "" );
+            return(piece == null);
         }
         public override string ToString() {
-            if (isSelected) { return ">" + piece.Icon + "<"; }
-            else { return "[" + piece.Icon + "]"; }
+            string str;
+            if (piece == null) { str = "  "; } 
+            else { str = piece.Icon; }
+            if (isSelected) { return ">" + str + "<"; }
+            else { return "[" + str + "]"; }
         }
 
         //Constructors
         public BoardSlot() {
             empty();
         }
-        public BoardSlot(string icon, string name, string color) {
-            piece = new ChessPiece(icon, name, color);
-        }
-        public BoardSlot(string id) {
-            
+        public BoardSlot(PieceColor color,PieceName name) {
+            piece = new ChessPiece(color,name);
         }
     }
 }
