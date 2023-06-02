@@ -3,23 +3,9 @@ using System.Collections;
 namespace Chess {
     public class Board {
         private BoardSlot[,] boardXY = new BoardSlot[8, 8];
-        private enum PieceType {
-            Pawn,
-            Bishop,
-            Knight,
-            Rook,
-            Queen,
-            King
-        }
         private int[] currSelection = new int[2];
         private string turn; //Determines who's turn it is
 
-
-        //Constructor
-        public BoardSlot[,] BoardXY {
-            get => boardXY;
-            set => boardXY = value;
-        }
 
         //Instantiates all the pieces and sets up the board for a game
         public void fillBoard() {
@@ -27,28 +13,28 @@ namespace Chess {
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
                     
                     //Pawns
-                    if (x == 1) { boardXY[x,y] = new BoardSlot("BP","Pawn","Black"); }
-                    if (x == 6) { boardXY[x,y] = new BoardSlot("WP","Pawn","White"); }
+                    if (x == 6) { boardXY[x,y] = new BoardSlot(PieceColor.White, PieceName.Pawn); }
+                    if (x == 1) { boardXY[x,y] = new BoardSlot(PieceColor.Black, PieceName.Pawn); }
 
                     //Bishops
-                    if ((x == 0 && y == 2) || (x == 0 && y == 5)) { boardXY[x,y] = new BoardSlot("BB","Bishop","Black"); }
-                    if ((x == 7 && y == 2) || (x == 7 && y == 5)) { boardXY[x,y] = new BoardSlot("WB","Bishop","White"); }
+                    if ((x == 7 && y == 2) || (x == 0 && y == 5)) { boardXY[x,y] = new BoardSlot(PieceColor.White, PieceName.Bishop); }
+                    if ((x == 0 && y == 2) || (x == 7 && y == 5)) { boardXY[x,y] = new BoardSlot(PieceColor.Black, PieceName.Bishop); }
 
                     //Knights
-                    if ((x == 0 && y == 1) || (x == 0 && y == 6)) { boardXY[x,y] = new BoardSlot("BN","Knight","Black"); }
-                    if ((x == 7 && y == 1) || (x == 7 && y == 6)) { boardXY[x,y] = new BoardSlot("WN","Knight","White"); }
+                    if ((x == 7 && y == 1) || (x == 0 && y == 6)) { boardXY[x,y] = new BoardSlot(PieceColor.White, PieceName.Knight); }
+                    if ((x == 0 && y == 1) || (x == 7 && y == 6)) { boardXY[x,y] = new BoardSlot(PieceColor.Black, PieceName.Knight); }
 
                     //Rooks
-                    if ((x == 0 && y == 0) || (x == 0 && y == 7)) { boardXY[x,y] = new BoardSlot("BR","Rook","Black"); }
-                    if ((x == 7 && y == 0) || (x == 7 && y == 7)) { boardXY[x,y] = new BoardSlot("WR","Rook","White"); }
+                    if ((x == 7 && y == 0) || (x == 0 && y == 7)) { boardXY[x,y] = new BoardSlot(PieceColor.White, PieceName.Rook); }
+                    if ((x == 0 && y == 0) || (x == 7 && y == 7)) { boardXY[x,y] = new BoardSlot(PieceColor.Black, PieceName.Rook); }
 
                     //Queens
-                    if ((x == 0 && y == 3)) { boardXY[x,y] = new BoardSlot("BQ","Queen","Black"); }
-                    if ((x == 7 && y == 3)) { boardXY[x,y] = new BoardSlot("WQ","Queen","White"); }
+                    if ((x == 7 && y == 3)) { boardXY[x,y] = new BoardSlot(PieceColor.White, PieceName.Queen); }
+                    if ((x == 0 && y == 3)) { boardXY[x,y] = new BoardSlot(PieceColor.Black, PieceName.Queen); }
 
                     //Kings
-                    if ((x == 0 && y == 4)) { boardXY[x,y] = new BoardSlot("BK","King","Black"); }
-                    if ((x == 7 && y == 4)) { boardXY[x,y] = new BoardSlot("WK","King","White"); }
+                    if ((x == 7 && y == 4)) { boardXY[x,y] = new BoardSlot(PieceColor.White, PieceName.King); }
+                    if ((x == 0 && y == 4)) { boardXY[x,y] = new BoardSlot(PieceColor.Black, PieceName.King); }
 
                     //Empty Spaces
                     //TODO: Recognize if a spot is empty without a piece and fill that in automatically
@@ -84,15 +70,12 @@ namespace Chess {
         }
         
         //Spawns in a chess piece
-        public void spawnPiece(string icon, string name, string color, int x, int y) {
-            boardXY[x,y] = new BoardSlot(icon,name,color);
+        public void spawnPiece(PieceColor color, PieceName name, int x, int y) {
+            boardXY[x,y] = new BoardSlot(color,name);
         }
 
         //Select pieces using coordinates and give coordinates they can move to
         public bool selectPiece() {
-            //Debug
-            //Console.WriteLine(x + " " + y);
-
             try {
                 Console.WriteLine("Please select a piece using the coordinates: ");
                 char[] coord = Console.ReadLine().ToCharArray();
@@ -109,12 +92,10 @@ namespace Chess {
                     for(int i = 0; i <= 7; i++) {
                         for(int j = 0; j <= 7; j++) {
                             if ( validMove(x,y,i,j) ) {
-                                // Console.Write("(" + (char)(j + 97) + "," + (8 - i) + ")");
                                 boardXY[i,j].IsSelected = true;
                             }
                         }
                     }
-                    // Console.WriteLine();
                     return true;
                 }
                 else {
@@ -186,49 +167,42 @@ namespace Chess {
             return false;
         }
         public bool validMove(int x, int y, int toX, int toY) {
-            PieceType type = Enum.Parse<PieceType>(boardXY[x,y].Piece.Name);
+            PieceName type = Enum.Parse<PieceName>(boardXY[x,y].Piece.Name);
             int offset = toX - x;
                 switch (type) {
-                case PieceType.Pawn:
-                    if ( (toX == x + 1) && boardXY[x,y].Piece.Color == "Black" && ((toY == y) || (toY == y + 1) || (toY == y - 1))
-                        || (toX == x - 1) && boardXY[x,y].Piece.Color == "White" && ((toY == y) || (toY == y + 1) || (toY == y - 1))
+                case PieceName.Pawn:
+                    if ( (toX == x + 1) && boardXY[x,y].Piece.Color == "Black" && ( (toY == y) || boardXY[toX,toY].Piece != null && ((toY == y + 1) || (toY == y - 1)) ) 
+                        || (toX == x - 1) && boardXY[x,y].Piece.Color == "White" && ( (toY == y) || boardXY[toX,toY].Piece != null && ((toY == y + 1) ||  (toY == y - 1)) ) 
                         || (toX == x + 2) && boardXY[x,y].Piece.Color == "Black" && (toY == y) && (x == 1)
                         || (toX == x - 2) && boardXY[x,y].Piece.Color == "White" && (toY == y) && (x == 6) ) {
                         return true;
                     }
                     break;
-                case PieceType.Bishop:
+                case PieceName.Bishop:
                     if ( ((toX == x + offset) && (toY == y + offset))
                         || ((toX == x + offset) && (toY == y - offset))) {
                         return true;
                     }
                     break;
-                case PieceType.Knight:
-                    bool NAlg(int i, int j) {
-                        if ( ((i == x - 2) || (i == x + 2)) && ((j == y + 1) || (j == y - 1)) 
-                        || ((j == y - 2) || (j == y + 2)) && ((i== x + 1) || (i == x - 1)) ) {
-                            return true;
-                        }
-                        else { return false; }
-                    }                   
-
-                    if ( NAlg(toX,toY) ) {
+                case PieceName.Knight:
+                    if ( ((toX == x - 2) || (toX == x + 2)) && ((toY == y + 1) || (toY == y - 1)) 
+                    || ((toY == y - 2) || (toY == y + 2)) && ((toX == x + 1) || (toX == x - 1)) ) {
                         return true;
                     }
                     break;
-                case PieceType.Rook:
+                case PieceName.Rook:
                     if ( (toX == x) || (toY == y) ) {
                         return true;
                     }
                     break;
-                case PieceType.Queen:
+                case PieceName.Queen:
                     if ( (((toX == x + offset) && (toY == y + offset))
                         || ((toX == x + offset) && (toY == y - offset)))
                         || ((toX == x) || (toY == y)) ) {
                         return true;
                     }
                     break;
-                case PieceType.King:
+                case PieceName.King:
                     if ( (toX == x + 1 || toX == x - 1 || toX == x) 
                         && (toY == y + 1 || toY == y - 1 || toY == y) ) {
                         return true;
