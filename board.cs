@@ -157,12 +157,12 @@ namespace Chess {
             }
         }
         
-        //Checks the boardstate for check, probably not needed
+        //Checks the boardstate for check
         public bool inCheck() {
             return false;
         }
         
-        //Checks to see if the game is over
+        //Checks to see if the current player can get out of check
         public bool isCheckmate() {
             return false;
         }
@@ -213,9 +213,10 @@ namespace Chess {
                     Console.WriteLine("That is not a chess piece");
                     break;
                 }
-            //Debug
-            //Console.WriteLine("Checking " + boardXY[x,y].Piece.Name + "'s movement");
             return false;
         }       
+        public bool isCollision(int x, int y, int toX, int toY) {
+            return false;
+        }
     }
 }
