@@ -3,18 +3,15 @@ namespace Chess {
         private string icon;
         private string name;
         private string color;
-        
-        public ChessPiece() {
-            this.icon = "  ";
-            this.name = "";
-        }
-        public ChessPiece(string icon, string name, string color) {
-            this.icon = icon;
-            this.name = name;
-            this.color = color;
+
+        public ChessPiece(PieceColor color, PieceName name) {
+            this.color = color.ToString();
+            this.name = name.ToString();
+            this.icon = this.color[0].ToString();
+            this.icon += this.name[0].ToString();
         }
 
-        //These are so cool
+        //Properties
         public string Icon {
             get => icon;
             set => icon = value;
