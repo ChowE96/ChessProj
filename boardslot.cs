@@ -20,7 +20,7 @@ namespace Chess {
         }
         public override string ToString() {
             string str;
-            if (piece == null) { str = "  "; } 
+            if (piece == null) { str = " "; } 
             else { str = piece.Icon; }
             if (isSelected) { return ">" + str + "<"; }
             else { return "[" + str + "]"; }
