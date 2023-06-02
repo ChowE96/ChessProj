@@ -3,11 +3,12 @@ namespace Chess {
         //This is the main game loop!
         public static void run() {
             Board board = new Board();
-            // board.fillBoard();
-            board.fillEmptyBoard();
+            board.fillBoard();
 
-            // Spawning in objects
-            board.spawnPiece("BP","Pawn","Black",4,4);
+            // Debug 
+            // Empty board + manual spawn
+            // board.fillEmptyBoard();
+            // board.spawnPiece("BP",0,3);
             
             while(!board.isCheckmate()) {
 
