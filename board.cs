@@ -138,10 +138,10 @@ namespace Chess {
             Console.WriteLine("You have selected: " + boardXY[x,y].Piece.Name);
             Console.WriteLine("Where do you want to move that piece: ");
             char[] coord = Console.ReadLine().ToCharArray();
-            int toX = 8 - ((int)coord[1] - 48);
-            int toY = (int)coord[0] - 97;
 
             try {
+                int toX = 8 - ((int)coord[1] - 48);
+                int toY = (int)coord[0] - 97;
                 if(x == toX && y == toY) {
                     Console.WriteLine("You deselected: " + boardXY[x,y].Piece.Name);
                     System.Threading.Thread.Sleep(1500);
@@ -181,7 +181,26 @@ namespace Chess {
 
         //Checks the boardstate for check
         public bool inCheck() {
-
+            int toX = -1;
+            int toY = -1;
+            for(int i = 0; i <= 7; i++) {
+                for(int j = 0; j <= 7; j++) {
+                    if (boardXY[i,j].Piece != null) {
+                        if ( boardXY[i,j].Piece.Name == "King" && boardXY[i,j].Piece.Color == turnColor ) {
+                            toX = i;
+                            toY = j;
+                        }
+                    }
+                }
+            }
+            if (toX == -1 || toY == -1) { return false; }
+            for(int x = 0; x <= 7; x++) {
+                for(int y = 0; y <= 7; y++) {
+                    if ( boardXY[x,y].Piece != null ) {
+                        if ( validMove(x,y,toX,toY) ) { return true; }
+                    }
+                }
+            }
             return false;
         }
         
@@ -194,7 +213,7 @@ namespace Chess {
             int offset = toX - x;
             SortedList<int,int> sList;
 
-            if ( (boardXY[toX,toY].Piece != null) && (boardXY[toX,toY].Piece.Color == turnColor) ) { return false; }
+            if ( (boardXY[toX,toY].Piece != null) && (boardXY[toX,toY].Piece.Color == boardXY[x,y].Piece.Color) ) { return false; }
 
             switch (type) {
                 case PieceName.Pawn:
@@ -202,14 +221,14 @@ namespace Chess {
                         || (toX == x - 1) && boardXY[x,y].Piece.Color == "White" && ( (toY == y) || boardXY[toX,toY].Piece != null && ((toY == y + 1) ||  (toY == y - 1)) ) 
                         || (toX == x + 2) && boardXY[x,y].Piece.Color == "Black" && (toY == y) && (x == 1)
                         || (toX == x - 2) && boardXY[x,y].Piece.Color == "White" && (toY == y) && (x == 6) ) {
-                        if ( isCollision(toX,toY) ) { return false; }
+                        if ( isCollision(x,y,toX,toY) ) { return false; }
                         return true;
                     }
                     break;
                 case PieceName.Bishop:
                     if ( ((toX == x + offset) && (toY == y + offset))
                         || ((toX == x + offset) && (toY == y - offset))) {
-                        if ( isCollision(toX,toY) ) { return false; }
+                        if ( isCollision(x,y,toX,toY) ) { return false; }
                         return true;
                     }
                     break;
@@ -223,7 +242,7 @@ namespace Chess {
                     break;
                 case PieceName.Rook:
                     if ( (toX == x) || (toY == y) ) {
-                        if ( isCollision(toX,toY) ) { return false; }
+                        if ( isCollision(x,y,toX,toY) ) { return false; }
                         return true;
                     }
                     break;
@@ -231,7 +250,7 @@ namespace Chess {
                     if ( (((toX == x + offset) && (toY == y + offset))
                         || ((toX == x + offset) && (toY == y - offset)))
                         || ((toX == x) || (toY == y)) ) {
-                        if ( isCollision(toX,toY) ) { return false; }
+                        if ( isCollision(x,y,toX,toY) ) { return false; }
                         return true;
                     }
                     break;
@@ -241,17 +260,10 @@ namespace Chess {
                         return true;
                     }
                     break;
-                //Default
-                default:
-                    Console.WriteLine("That is not a chess piece");
-                    break;
             }
             return false;
         }       
-        public bool isCollision(int toX, int toY) {
-            int x = currSelection[0];
-            int y = currSelection[1];
-            
+        public bool isCollision(int x, int y, int toX, int toY) {            
             //Checks top
             if ( (toX < x) && (toY == y) ) {
                 for (int i = x - 1; i > toX; i--) {
