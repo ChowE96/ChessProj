@@ -151,12 +151,34 @@ namespace Chess {
                     if (boardXY[toX,toY].isEmpty()) {
                         boardXY[toX,toY].Piece = boardXY[x,y].Piece;
                         boardXY[x,y].empty();
+
+                        if ( inCheck() ) { 
+                            Console.WriteLine("You are still in or will be in check!");
+                            System.Threading.Thread.Sleep(1500);
+
+                            boardXY[x,y].Piece = boardXY[toX,toY].Piece;
+                            boardXY[toX,toY].empty();
+
+                            return false;
+                        }
                         return true;
                     }
                     else {
+                        BoardSlot bs = new BoardSlot();
+                        bs.Piece = boardXY[toX,toY].Piece;
                         boardXY[toX,toY].empty();
                         boardXY[toX,toY].Piece = boardXY[x,y].Piece;
                         boardXY[x,y].empty();
+
+                        if ( inCheck() ) { 
+                            Console.WriteLine("You are still in or will be in check!");
+                            System.Threading.Thread.Sleep(1500);
+
+                            boardXY[x,y].Piece = boardXY[toX,toY].Piece;
+                            boardXY[toX,toY].Piece = bs.Piece;
+
+                            return false;
+                        }
                         return true;
                     }
                 }
@@ -222,7 +244,7 @@ namespace Chess {
                         || (toX == x + 2) && boardXY[x,y].Piece.Color == "Black" && (toY == y) && (x == 1)
                         || (toX == x - 2) && boardXY[x,y].Piece.Color == "White" && (toY == y) && (x == 6) ) {
                         if ( isCollision(x,y,toX,toY) ) { return false; }
-                        return true;
+                        if ( isPawnMove() ) { return true; }
                     }
                     break;
                 case PieceName.Bishop:
@@ -345,6 +367,9 @@ namespace Chess {
             }
 
             return false;
+        }
+        public bool isPawnMove() {
+            return true;
         }
     }
 }
