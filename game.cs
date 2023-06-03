@@ -11,11 +11,14 @@ namespace Chess {
             // Debug 
             // Empty board + manual spawn
             // board.fillEmptyBoard();
-            // board.spawnPiece("BP",0,3);
+            // board.spawnPiece(PieceColor.White, PieceName.Queen, 5, 5);
+            // board.spawnPiece(PieceColor.Black, PieceName.King, 3, 4);
 
             while(!board.isCheckmate()) {
 
                 board.drawBoard();
+
+                if ( board.inCheck() ) { Console.WriteLine("You are in check!"); }
 
                 if (board.selectPiece()) {
 
