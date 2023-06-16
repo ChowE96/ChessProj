@@ -10,9 +10,10 @@ namespace Chess {
 
             // Debug 
             // Empty board + manual spawn
-            // board.fillEmptyBoard();
-            // board.spawnPiece(PieceColor.White, PieceName.Queen, 5, 5);
-            // board.spawnPiece(PieceColor.Black, PieceName.King, 3, 4);
+            // board.makeBoard();
+            // board.spawnPiece(PieceColor.White, PieceName.King, 2, 6);
+            // board.spawnPiece(PieceColor.Black, PieceName.King, 0, 7);
+            // board.spawnPiece(PieceColor.White, PieceName.Queen, 1, 5);
 
             while(!board.isCheckmate()) {
 
@@ -35,6 +36,11 @@ namespace Chess {
                 board.deselectAll();
 
             }
+
+            board.drawBoard();
+            Console.WriteLine("Checkmate is on the board!");
+            Console.WriteLine("Press any key to continue: ");
+            Console.ReadLine();
         }
     }
 }

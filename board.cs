@@ -11,7 +11,7 @@ namespace Chess {
         //Instantiates all the pieces and sets up the board for a game
         public void fillBoard() {
             //Make an empty board
-            fillEmptyBoard();
+            makeBoard();
             
             //Pawns
             for(int y = 0; y < boardXY.GetLength(1); y++) {
@@ -46,7 +46,7 @@ namespace Chess {
             spawnPiece(PieceColor.Black, PieceName.King, 0, 4);
 
         }
-        public void fillEmptyBoard() {
+        public void makeBoard() {
             for(int x = 0; x < boardXY.GetLength(0); x++) {
                 for(int y = 0; y < boardXY.GetLength(1); y++) {
                     boardXY[x,y] = new BoardSlot();
@@ -228,7 +228,56 @@ namespace Chess {
         
         //Checks to see if the current player can get out of check
         public bool isCheckmate() {
-            return false;
+            if ( inCheck() ) {
+                for(int x = 0; x <= 7; x++) {
+                    for(int y = 0; y <= 7; y++) {
+                        if ( boardXY[x,y].Piece != null && boardXY[x,y].Piece.Color == turnColor) {
+                            for(int toX = 0; toX <= 7; toX++) {
+                                for(int toY = 0; toY <= 7; toY++) {
+                                    if ( validMove(x,y,toX,toY) ) 
+                                    { 
+                                        // Console.WriteLine("(" + (char)(y + 97) + "," + (char)(8 - x + 48) + ") to (" + (char)(toY + 97) + "," + (char)(8 - toX + 48) + ")");
+                                        // Console.ReadLine();
+                                        if (boardXY[toX,toY].isEmpty()) {
+                                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                                            boardXY[x,y].empty();
+
+                                            if ( !inCheck() ) {
+                                                boardXY[x,y].Piece = boardXY[toX,toY].Piece;
+                                                boardXY[toX,toY].empty();
+                                                return false;
+                                            }
+                                            else { 
+                                                boardXY[x,y].Piece = boardXY[toX,toY].Piece;
+                                                boardXY[toX,toY].empty();
+                                            }
+                                        }
+                                        else {
+                                            BoardSlot bs = new BoardSlot();
+                                            bs.Piece = boardXY[toX,toY].Piece;
+                                            boardXY[toX,toY].empty();
+                                            boardXY[toX,toY].Piece = boardXY[x,y].Piece;
+                                            boardXY[x,y].empty();
+
+                                            if ( !inCheck() ) {
+                                                boardXY[x,y].Piece = boardXY[toX,toY].Piece;
+                                                boardXY[toX,toY].Piece = bs.Piece;
+                                                return false;
+                                            }
+                                            else { 
+                                                boardXY[x,y].Piece = boardXY[toX,toY].Piece;
+                                                boardXY[toX,toY].Piece = bs.Piece;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+            else return false;
         }
         public bool validMove(int x, int y, int toX, int toY) {
             PieceName type = Enum.Parse<PieceName>(boardXY[x,y].Piece.Name);
@@ -239,13 +288,24 @@ namespace Chess {
 
             switch (type) {
                 case PieceName.Pawn:
-                    if ( (toX == x + 1) && boardXY[x,y].Piece.Color == "Black" && ( (toY == y) || boardXY[toX,toY].Piece != null && ((toY == y + 1) || (toY == y - 1)) ) 
-                        || (toX == x - 1) && boardXY[x,y].Piece.Color == "White" && ( (toY == y) || boardXY[toX,toY].Piece != null && ((toY == y + 1) ||  (toY == y - 1)) ) 
-                        || (toX == x + 2) && boardXY[x,y].Piece.Color == "Black" && (toY == y) && (x == 1)
-                        || (toX == x - 2) && boardXY[x,y].Piece.Color == "White" && (toY == y) && (x == 6) ) {
-                        if ( isCollision(x,y,toX,toY) ) { return false; }
-                        if ( isPawnMove() ) { return true; }
+                    if ( boardXY[x,y].Piece.Color == "White" )
+                    {
+                        if ( (boardXY[toX,toY].Piece == null && ((toX == x - 2 && x == 6 || toX == x - 1) && toY == y))
+                        || (boardXY[toX,toY].Piece != null && toX == x - 1 && (toY == y + 1 || toY == y - 1)) )
+                        {
+                            return true;
+                        }
                     }
+                    if ( boardXY[x,y].Piece.Color == "Black" )
+                    {
+                        if ( (boardXY[toX,toY].Piece == null && ((toX == x + 2 && x == 1 || toX == x + 1) && toY == y) )
+                        || boardXY[toX,toY].Piece != null && toX == x + 1 && (toY == y + 1 || toY == y - 1) )
+                        {
+                            return true;
+                        }
+                    }
+                    if ( isCollision(x,y,toX,toY) ) { return false; }
+                    // else if ( isPawnMove(x,y,toX,toY) ) { return true; }
                     break;
                 case PieceName.Bishop:
                     if ( ((toX == x + offset) && (toY == y + offset))
@@ -259,8 +319,6 @@ namespace Chess {
                     || ((toY == y - 2) || (toY == y + 2)) && ((toX == x + 1) || (toX == x - 1)) ) {
                         return true;
                     }
-                    // sList = new SortedList<int, int>();
-                    // sList.Add(x,y);
                     break;
                 case PieceName.Rook:
                     if ( (toX == x) || (toY == y) ) {
@@ -368,7 +426,12 @@ namespace Chess {
 
             return false;
         }
-        public bool isPawnMove() {
+        public bool isPawnMove(int x, int y, int toX, int toY) {
+            // if  ( boardXY[toX,y].Piece == null )
+            // {
+            //     return true;
+            // }
+
             return true;
         }
     }
