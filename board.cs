@@ -7,6 +7,7 @@ namespace Chess {
         private string turnColor = "White"; //Determines who's turn it is
         private List<ChessPiece> whiteDeath = new List<ChessPiece>();
         private List<ChessPiece> blackDeath = new List<ChessPiece>();
+        private List<int> possibleMoves = new List<int>(); //List of current possible moves
 
         //Instantiates all the pieces and sets up the board for a game
         public void fillBoard() {

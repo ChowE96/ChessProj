@@ -38,7 +38,7 @@ namespace Chess {
             }
 
             board.drawBoard();
-            Console.WriteLine("Checkmate is on the board!");
+            Console.WriteLine("Checkmate!");
             Console.WriteLine("Press any key to continue: ");
             Console.ReadLine();
         }
